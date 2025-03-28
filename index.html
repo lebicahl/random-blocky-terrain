@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head id="head_content">
+  <link rel="stylesheet" href="css_styles/style.css">
+  <script src="gl-matrix-min.js" defer></script>
+  <script type="module" src="object_renderer_game.js" defer></script>
+</head>
+
+<script src="head_content.js">
+</script>
+
+<body>
+  
+  <div class="main_margin">
+  
+    <div class="box_divide_two" style="margin-top: 100px">
+      <h1 class="">lebicahl's blocky terrain</h1>
+    </div>
+    
+    <div id="canvas_container"
+      style="
+          position: relative;
+          display: inline-block;
+          justify-content: center;
+          display: flex;
+      "
+    >
+    </div>
+    
+    <script type="module">
+        async function main() {
+            function updateCanvasDimensions() {
+
+                // Get the width excluding scrollbar
+                const contentWidth = document.documentElement.clientWidth;
+
+                const maxWidth = 800;
+
+                // Update canvas dimensions
+                if (contentWidth > maxWidth) {
+                    canvas_game.width = maxWidth;
+                    canvas_game.height = maxWidth;
+                } else {
+                    canvas_game.width = contentWidth;
+                    canvas_game.height = contentWidth;
+                }
+            }
+
+            // Create a canvas element
+            const canvas_game = document.createElement('canvas');
+
+            // Optionally position it absolutely to overlay the page
+            canvas_game.style.position = 'relative';
+            canvas_game.style.top = '0';
+            canvas_game.style.left = '0';
+            canvas_game.style.zIndex = '1';
+            canvas_game.id = 'canvas_game';
+            canvas_game.style.marginLeft = '0px';
+
+            const canvas_container = document.getElementById("canvas_container");
+
+            canvas_container.appendChild(canvas_game);
+
+            const { draw_game } = await import('./object_renderer_game.js');
+
+            const { update_projection_game } = await import('./object_renderer_game.js');
+
+            await draw_game();
+
+            async function reProjection() {
+                const contentWidth = document.documentElement.clientWidth;
+                const contentHeight = document.body.scrollHeight;
+
+                const maxWidth = 800;
+                if (contentWidth > maxWidth) {
+                  await update_projection_game(maxWidth, maxWidth);
+                } else {
+                  await update_projection_game(contentWidth, contentWidth);
+                }
+            }
+
+            updateCanvasDimensions();
+            await reProjection();
+
+            window.addEventListener('resize', updateCanvasDimensions);
+            window.addEventListener('resize', reProjection);
+        }
+        main();
+    </script>
+
+  </div>
+</body>
+</html>
