@@ -147,7 +147,7 @@ export const randomNumbers = [];
 export async function draw_game() {
     const renderer1 = await createRenderer('canvas_game');
     
-    const texture = renderer1.loadTexture('terrain/textures/eranorSpriteMapV5.png');
+    const texture = renderer1.loadTexture('./terrain/textures/eranorSpriteMapV5.png');
 
     for (let i = 0; i < 100; i++) {
         randomNumbers[i] = [];
